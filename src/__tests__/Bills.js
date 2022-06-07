@@ -109,6 +109,32 @@ describe("Given I am connected as an employee", () => {
       expect(handleClickIconEye).toHaveBeenCalled()
     })
   })
+
+  describe('When I am on Bills Page', () => {
+    test('Then return bills data', () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      mockStore.bills = jest.fn().mockImplementationOnce(() => {
+        return {
+          list: jest.fn().mockResolvedValue([{ id: 1, data: () => ({ date: '' }) }])
+        }
+      })
+
+      const bills = new Bills({
+        document, onNavigate, store: mockStore, localStorage
+      })
+
+      const res = bills.getBills()
+
+      expect(res).toEqual(Promise.resolve({}))
+    })
+  })
 })
 
 // test d'intégration GET
