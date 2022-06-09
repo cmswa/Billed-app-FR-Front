@@ -167,7 +167,7 @@ describe("Given I am a user connected as employee", () => {
         document.body.appendChild(root)
         router()
       })
-      
+
       test("fetches bills from an API and fails with 404 message error", async () => {
 
         mockStore.bills.mockImplementationOnce(() => {
@@ -179,6 +179,8 @@ describe("Given I am a user connected as employee", () => {
         })
         const html = BillsUI({ error: "Erreur 404" })
         document.body.innerHTML = html
+        window.onNavigate(ROUTES_PATH.Bills)
+        await new Promise(process.nextTick);
         const message = await screen.getByText(/Erreur 404/)
         expect(message).toBeTruthy()
       })
